@@ -32,5 +32,6 @@ Match User cosmos
 ```   
 
 **Note**
+
 `ChrootDirectory directory must be owned by root and group root and have 755 mode, we can upload files under the sub directory of Chroot Directory`
 
