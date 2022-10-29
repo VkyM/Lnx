@@ -35,10 +35,12 @@ sudo passwd <mail_user>
 
 # Set specific command to run for mail user cause of sending mail using visudo
 <mail_user> ALL#NOPASSWD: /usr/bin/mail, /usr/bin/echo
-
-Note:- That <mail_user> have mail account.
-       For Example:- If mail_user name is vignesh.m, mail id is same 
-							Ex:- vignesh.m@zzz.com -> valid mail id
+```
+Note:-
+```
+That <mail_user> have mail account.
+For Example:- If mail_user name is vignesh.m, mail id is same 
+Ex:- vignesh.m@zzz.com -> valid mail id
 ```
 ----------------------------------------------------------------------------------------------------------
 
@@ -83,9 +85,10 @@ fi
 
 ```
 
-```
 
 Note:-
+
+```
 	$? 	-> means value from past command, if past command is successfull,? value is 0 otherwise some value.
 	echo 	-> body of the message.
 	-s	-> subject of the message.
