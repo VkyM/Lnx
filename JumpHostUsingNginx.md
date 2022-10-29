@@ -31,7 +31,7 @@ stream {
 		    |_available
 		    |_enabled
 ```
-Note:- 
+Note: 
 	* availabe -> create conf file.	
 	* enabled  -> link files that refers "avilable" directory. ( Easily manage conf files)
 ----------------------------------------------------------------------------------------------------------------
