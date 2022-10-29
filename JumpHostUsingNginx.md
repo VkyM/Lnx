@@ -32,10 +32,11 @@ stream {
 		    |_enabled
 ```
 Note: 
+
 	* availabe -> create conf file.	
 	* enabled  -> link files that refers "avilable" directory. ( Easily manage conf files)
 ----------------------------------------------------------------------------------------------------------------
-### 4. create stream conf file. 
+### 4. create stream conf file.
 We create stream conf in the order of service (or) host.
 
 Per Host:
@@ -89,8 +90,10 @@ streams/available/ssh.conf
 			}
 ```
 Note:
-Create link for conf files.
-`sudo ln -s /etc/nginx/rproxy/streams/available/*.conf /etc/nginx/rproxy/streams/enabled`
+```
+#Create link for conf files.
+sudo ln -s /etc/nginx/rproxy/streams/available/*.conf /etc/nginx/rproxy/streams/enabled
+```
 -------------------------------------------------------------------------------------------------------------------------------------------------------
 
 ### 5. Testing the stream. 
