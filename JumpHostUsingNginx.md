@@ -1,4 +1,4 @@
-## connect tcp/udp stream via jumphost. 
+## Connect tcp/udp stream via jumphost. 
 
 1. Install nginx
 2. Add stream directive in nginx.conf file.
@@ -22,7 +22,7 @@ stream {
 
 ```
 --------------------------------------------------------------------------------------------------------------
-### 3.  create directory structure as mentioned in stream directive
+### 3. Create directory structure as mentioned in stream directive
 ```
 	etc
 	|_nginx
@@ -36,7 +36,7 @@ Note:
 	* availabe -> create conf file.	
 	* enabled  -> link files that refers "avilable" directory. ( Easily manage conf files)
 ----------------------------------------------------------------------------------------------------------------
-### 4. create stream conf file.
+### 4. Create stream conf file.
 We create stream conf in the order of service (or) host.
 
 Per Host:
