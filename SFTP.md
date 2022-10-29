@@ -31,7 +31,7 @@ Match User cosmos
    AllowTcpForwarding no
 ```   
 
-Note:- 
+** Note **
 
 `ChrootDirectory directory must be owned by root and group root and have 755 mode, we can upload files under the sub directory of Chroot Directory`
 
