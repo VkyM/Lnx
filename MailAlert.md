@@ -1,4 +1,4 @@
- ### Send alert mail when backup is complete. 
+## Send alert mail when backup is complete. 
 
 Steps:
 
@@ -9,7 +9,7 @@ Steps:
 5. Add the Scrpt in crontab.
 ----------------------------------------------------------------------------------------------------------
 
-#### 1. Install ssmtp and mailutils 
+### 1. Install ssmtp and mailutils 
 ```
 
 # To install ssmtp
@@ -24,7 +24,7 @@ sudo apt install mailutils
 ```
 ----------------------------------------------------------------------------------------------------------
 
-#### 2. Create user for sending mail 
+### 2. Create user for sending mail 
 ```
 
 sudo useradd -m <mail_user>
@@ -42,7 +42,7 @@ Note:- That <mail_user> have mail account.
 ```
 ----------------------------------------------------------------------------------------------------------
 
-#### 3.Set smtp server under /etc/ssmtp/ssmtp.conf:(only edit by sudo user) 
+### 3.Set smtp server under /etc/ssmtp/ssmtp.conf:(only edit by sudo user) 
 ```
 
 root#postmaster
@@ -65,7 +65,7 @@ UseTLS#Yes
 ```
 ----------------------------------------------------------------------------------------------------------------
 
-#### 4. Create Script for backup mysql database 
+### 4. Create Script for backup mysql database 
 
 Ex:-
 ```
@@ -98,7 +98,7 @@ If script is successfully running, then add in <mail_user> crontab.
 
 ```
 -------------------------------------------------------------------------------------------------------------------------
-#### 5. Add the Scrpt in crontab.
+### 5. Add the Scrpt in crontab.
 Ex:-
 `50 23 * * * sh /home/mail_user/<script_name>`
 OR
