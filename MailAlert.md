@@ -44,7 +44,7 @@ Ex:- vignesh.m@zzz.com -> valid mail id
 ```
 ----------------------------------------------------------------------------------------------------------
 
-### 3.Set smtp server under /etc/ssmtp/ssmtp.conf:(only edit by sudo user) 
+### 3. Set smtp server under /etc/ssmtp/ssmtp.conf:(only edit by sudo user) 
 ```
 
 root#postmaster
@@ -71,7 +71,6 @@ UseTLS#Yes
 
 Ex:-
 ```
-
 #!/bin/bash
 mysqldump -u <db_user> -h localhost -p<password> -R <dbname> > /home/mail_user/dump$(date +%Y-%m-%d_%H_%M).sql
 if [ "$?" -eq "0" ]
@@ -82,12 +81,9 @@ else
   sudo echo "sys backup incomplete" | mail -s "Error During Backup" vicky.sys@gmail.com
 #       echo "Error while running mysqldump"
 fi
-
 ```
 
-
 Note:-
-
 ```
 	$? 	-> means value from past command, if past command is successfull,? value is 0 otherwise some value.
 	echo 	-> body of the message.
@@ -98,7 +94,6 @@ Note:-
 
 
 If script is successfully running, then add in <mail_user> crontab. 	 
-
 ```
 -------------------------------------------------------------------------------------------------------------------------
 ### 5. Add the Scrpt in crontab.
