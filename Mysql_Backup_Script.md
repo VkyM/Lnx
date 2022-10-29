@@ -4,13 +4,13 @@
 
 # Give Mysql configuration in the middle of " ".
 
-host="192.168.100.xx" 			# This is mysql ip
-Server="MyServer"     			# Alternative name for mysql server
+host="192.168.100.xx"			# This is mysql ip
+Server="MyServer"				# Alternative name for mysql server
 port="3306"						# Mysql port number
 user="vkydb"					# Mysql username
 passwd="vky@zz!23"				# Mysql password
 DataBases=(db1 db2 db3)			# Give the databases which want to be backup
-mail_id="dbbackup@zzz.com"      # Give the mail id to receive acknowledgement
+mail_id="dbbackup@zzz.com"		# Give the mail id to receive acknowledgement
 Dest="Backup/"					# Give the destination folder to store the sql file
 
 # Dont edit the below code 
