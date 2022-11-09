@@ -34,7 +34,7 @@ sudo useradd -m <mail_user>
 sudo passwd <mail_user>
 
 # Set specific command to run for mail user cause of sending mail using visudo
-<mail_user> ALL#NOPASSWD: /usr/bin/mail, /usr/bin/echo
+<mail_user> ALL=NOPASSWD: /usr/bin/mail, /usr/bin/echo
 ```
 Note:-
 ```
@@ -47,22 +47,22 @@ Ex:- vignesh.m@zzz.com -> valid mail id
 ### 3. Set smtp server under /etc/ssmtp/ssmtp.conf:(only edit by sudo user) 
 ```
 
-root#postmaster
+root=postmaster
 
 #SMTP Server
-mailhub#mail.zzz.com:465
+mailhub=mail.zzz.com:465
 
 # domain name
-hostname#zzz.com
+hostname=zzz.com
 
 #mail user name
-AuthUser#vignesh.m@zzz.com
+AuthUser=vignesh.m@zzz.com
 
 # mail password
-AuthPass#Vyyy@xxx
+AuthPass=Vyyy@xxx
 
 # For secure
-UseTLS#Yes
+UseTLS=Yes
 
 ```
 ----------------------------------------------------------------------------------------------------------------
