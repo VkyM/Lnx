@@ -14,7 +14,7 @@
 #### Generate CA file
 ` openssl pkcs12 -in cert.pfx -nokeys -nodes -cacerts -out ca-bundle.crt `
 
-> Note:- **if ca-bundle is empty when extract from .pfx, Dont include httpd.conf**
+> Note:- **if ca-bundle is empty when extract from .pfx, Dont include ca-bundle on httpd.conf**
 
 ### Usage in httpd config
 ```
