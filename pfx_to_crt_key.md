@@ -16,7 +16,7 @@ Note:-
 ` openssl pkcs12 -in cert.pfx -nokeys -nodes -cacerts -out ca-bundle.crt `
 
 Note:- 
-*** if ca-bundle is empty when extract from .pfx, Dont include httpd.conf ***
+> if ca-bundle is empty when extract from .pfx, Dont include httpd.conf 
 
 ### Usage in httpd config
 ```
