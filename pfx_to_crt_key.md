@@ -3,8 +3,7 @@
 #### Extract encrypted private key
 `openssl pkcs12 -in cert.pfx -nocerts -out cert-encrypted.key`
 
-Note:-
-*** Type the password that you used to protect your keypair when you created the .pfx file. You will be prompted again to provide a new password to protect the .key file ***
+> Note:- **Type the password that you used to protect your keypair when you created the .pfx file. You will be prompted again to provide a new password to protect the .key file**
 
 #### Convert encrypted private key to decrypted private key
 `openssl rsa -in cert-encrypted.key -out cert.key`
@@ -15,8 +14,7 @@ Note:-
 #### Generate CA file
 ` openssl pkcs12 -in cert.pfx -nokeys -nodes -cacerts -out ca-bundle.crt `
 
-Note:- 
-> if ca-bundle is empty when extract from .pfx, Dont include httpd.conf 
+> Note:- **if ca-bundle is empty when extract from .pfx, Dont include httpd.conf**
 
 ### Usage in httpd config
 ```
