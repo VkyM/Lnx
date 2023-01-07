@@ -8,7 +8,6 @@ git clone https://github.com/VundleVim/Vundle.vim.git ~/.vim/bundle/Vundle.vim
 `vim ~/.vimrc`
 
 3. setup molokai colorscheme
-create colors folder under .vim folder and download it on folder
-download molokai.vim from vim.org website
+`create colors folder under .vim folder and download from vim.org on color folder`
 
 
