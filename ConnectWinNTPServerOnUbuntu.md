@@ -56,5 +56,5 @@ sudo systemctl restart ntp
 
 ### 4. Connect with Windows NTP server from ubuntu  
 
-`sudo ntpdate -u 192.168.48.56`
+`sudo ntpdate -u <NTP Server IP>`
 
