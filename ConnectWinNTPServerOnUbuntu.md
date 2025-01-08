@@ -37,13 +37,14 @@ net start w32time
 ### 2. Check the Windows NTP Server on network  
 
 On the ubuntu system
-`sudo nmap -sU -p <Windows_NTP_Server`
+`sudo nmap -sU -p <Windows_NTP_Server>`
 
 ----------------------------------------------------------------------------------------------------------
 
 ### 3. Install and configure NTP on ubuntu as client 
 ```
 sudo apt install ntp -y
+sudo apt install ntpdate -y
 sudo nano /etc/ntp.conf
 
 # Add the below line in /etc/ntp.conf file and comment the other ntp server 
@@ -56,5 +57,6 @@ sudo systemctl restart ntp
 
 ### 4. Connect with Windows NTP server from ubuntu  
 
-`sudo ntpdate -u <NTP Server IP>`
+`sudo ntpdate -u <NTP Server IP>`  
+Note: To show UTC time in system. `timedatectl set-timezone UTC`
 
