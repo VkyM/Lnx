@@ -1,4 +1,4 @@
-## Get time from NTP server of Windows 11 on ubuntu
+mmmasank## Get time from NTP server of Windows 11 on ubuntu
 
 Steps:
 
