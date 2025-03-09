@@ -7,7 +7,7 @@
 
 ---
 
-## Slide 1: What is Docker?
+## 1: What is Docker?
 
 - Docker is a platform for developing, shipping, and running applications in containers.
 - Uses containerization to package applications with dependencies.
@@ -15,7 +15,7 @@
 
 ---
 
-## Slide 2: Why Use Docker?
+## 2: Why Use Docker?
 
 - Works across different OS environments.
 - Lightweight compared to Virtual Machines.
@@ -24,7 +24,7 @@
 
 ---
 
-## Slide 3: Docker vs Virtual Machines
+## 3: Docker vs Virtual Machines
 
 | Feature        | Docker Containers | Virtual Machines |
 | -------------- | ----------------- | ---------------- |
@@ -35,7 +35,7 @@
 
 ---
 
-## Slide 4: Key Docker Components
+## 4: Key Docker Components
 
 - **Docker Engine**: Runs and manages containers.
 - **Docker Images**: Read-only templates to create containers.
@@ -56,7 +56,7 @@ docker rm <container_id>  # Remove a container
 
 ---
 
-## Slide 6: Installing Docker
+## 6: Installing Docker
 
 - **Windows**: Install Docker Desktop.
 - **Mac**: Install Docker Desktop.
@@ -69,7 +69,7 @@ docker --version
 
 ---
 
-## Slide 7: Running Your First Container
+## 7: Running Your First Container
 
 ```sh
 docker run -d -p 80:80 nginx
@@ -80,7 +80,7 @@ docker run -d -p 80:80 nginx
 
 ---
 
-## Slide 8: Summary
+## 8: Summary
 
 - Docker simplifies application deployment.
 - Lightweight and portable compared to VMs.
@@ -88,7 +88,3 @@ docker run -d -p 80:80 nginx
 - Next: Writing a Dockerfile.
 
 ---
-
-## Slide 9: Q&A
-
-- Ask any questions!
