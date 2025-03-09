@@ -1,11 +1,9 @@
 # Introduction to Docker
 
-## Title Slide
-
 **Introduction to Docker**
 
-- **Your Name**
-- **Date**
+- **Vignesh M**
+- **9-mar-2025**
 
 ---
 
