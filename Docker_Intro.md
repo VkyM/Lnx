@@ -103,7 +103,7 @@ COPY . /app
 WORKDIR /app
 
 # Expose ports
-EXPOSE 8080
+#EXPOSE 8080
 
 # Define startup command
 CMD ["python3", "app.py"]
