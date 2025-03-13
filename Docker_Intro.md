@@ -1,12 +1,5 @@
 # Introduction to Docker
 
-**Introduction to Docker**
-
-- **Vignesh M**
-- **9-mar-2025**
-
----
-
 ## 1: What is Docker?
 
 - Docker is a platform for developing, shipping, and running applications in containers.
@@ -85,6 +78,63 @@ docker run -d -p 80:80 nginx
 - Docker simplifies application deployment.
 - Lightweight and portable compared to VMs.
 - Basic commands to get started.
-- Next: Writing a Dockerfile.
+
+# Dockerfile Guide
+
+## What is a Dockerfile?
+A Dockerfile is a script that contains a set of instructions to automate the creation of a Docker image. It defines the base image, dependencies, configurations, and the command to run the containerized application.
+
+## Basic Structure of a Dockerfile
+```dockerfile
+# Use a base image
+FROM ubuntu:latest
+
+# Set environment variables (optional)
+ENV APP_NAME="MyApp"
+
+# Install dependencies
+RUN apt-get update && apt-get install -y curl
+
+# Copy application files
+COPY . /app
+
+# Set working directory
+WORKDIR /app
+
+# Expose ports
+EXPOSE 8080
+
+# Define startup command
+CMD ["python3", "app.py"]
+```
+
+## Common Dockerfile Instructions
+- **FROM**: Specifies the base image.
+- **RUN**: Executes commands inside the container.
+- **COPY**: Copies files from the host to the container.
+- **WORKDIR**: Sets the working directory inside the container.
+- **CMD**: Specifies the default command to run when the container starts.
+- **ENTRYPOINT**: Similar to CMD but used for defining executable scripts.
+- **EXPOSE**: Defines the port on which the container will listen.
+
+## Building and Running a Docker Image
+1. **Build the Image**
+   ```sh
+   docker build -t myapp .
+   ```
+2. **Run a Container**
+   ```sh
+   docker run -d -p 8080:8080 myapp
+   ```
+
+## Best Practices
+- Use a minimal base image to reduce size.
+- Combine `RUN` instructions to minimize layers.
+- Use `.dockerignore` to exclude unnecessary files.
+- Avoid running containers as root.
+- Use multi-stage builds for efficient image size reduction.
+
+## Conclusion
+A well-structured Dockerfile helps in creating efficient and secure Docker images. Following best practices ensures better performance, security, and maintainability.
 
 ---
