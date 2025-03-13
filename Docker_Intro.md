@@ -136,7 +136,7 @@ docker build -t myapp .
 
 ### 4. Run a Container from the Image
 ```sh
-docker run -d -p 8080:8080 --name myapp_container myapp
+docker run --name myapp_container myapp
 ```
 
 ### 5. Check Running Containers
