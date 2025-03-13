@@ -93,7 +93,7 @@ FROM ubuntu:latest
 ENV APP_NAME="MyApp"
 
 # Install dependencies
-RUN apt-get update && apt-get install -y curl
+RUN apt-get update && apt-get install -y curl python3 python3-pip
 
 # Copy application files
 COPY . /app
