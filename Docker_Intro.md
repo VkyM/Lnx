@@ -118,15 +118,53 @@ CMD ["python3", "app.py"]
 - **EXPOSE**: Defines the port on which the container will listen.
 
 ## Building and Running a Docker Image
-1. **Build the Image**
-   ```sh
-   docker build -t myapp .
-   ```
-2. **Run a Container**
-   ```sh
-   docker run -d -p 8080:8080 myapp
-   ```
+### 1. Create a Dockerfile
+Ensure the `Dockerfile` is saved in your project directory.
 
+### 2. Add an Application File (Example `app.py`)
+```python
+# app.py
+print("Hello, Docker!")
+```
+
+### 3. Build the Image
+Run the following command in the terminal inside the directory containing the `Dockerfile`:
+```sh
+docker build -t myapp .
+```
+
+### 4. Run a Container from the Image
+```sh
+docker run -d -p 8080:8080 --name myapp_container myapp
+```
+
+### 5. Check Running Containers
+```sh
+docker ps
+```
+
+### 6. Access the Container
+To open an interactive shell inside the running container:
+```sh
+docker exec -it myapp_container bash
+```
+
+### 7. View Logs
+To check container output:
+```sh
+docker logs myapp_container
+```
+
+### 8. Stop and Remove the Container
+```sh
+docker stop myapp_container
+docker rm myapp_container
+```
+
+### 9. Remove the Image (Optional)
+```sh
+docker rmi myapp
+```
 ## Best Practices
 - Use a minimal base image to reduce size.
 - Combine `RUN` instructions to minimize layers.
