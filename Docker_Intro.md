@@ -42,6 +42,7 @@
 ```sh
 docker run hello-world  # Run a test container
 docker ps  # List running containers
+docker ps -a # List all containers
 docker images  # List downloaded images
 docker stop <container_id>  # Stop a running container
 docker rm <container_id>  # Remove a container
