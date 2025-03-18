@@ -166,6 +166,10 @@ docker rm myapp_container
 ```sh
 docker rmi myapp
 ```
+### 10. Mount local folder in Container
+```sh
+docker run -d --name mynginx -p 8080:80 -v /home/vignesh/nginx_data:/usr/share/nginx/html:ro nginx
+```
 ## Best Practices
 - Use a minimal base image to reduce size.
 - Combine `RUN` instructions to minimize layers.
