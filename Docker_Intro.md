@@ -1,6 +1,6 @@
 # Introduction to Docker
 
-## 1: What is Docker?
+### 1: What is Docker?
 
 - Docker is a platform for developing, shipping, and running applications in containers.
 - Uses containerization to package applications with dependencies.
@@ -8,7 +8,7 @@
 
 ---
 
-## 2: Why Use Docker?
+### 2: Why Use Docker?
 
 - Works across different OS environments.
 - Lightweight compared to Virtual Machines.
@@ -17,7 +17,7 @@
 
 ---
 
-## 3: Docker vs Virtual Machines
+### 3: Docker vs Virtual Machines
 
 | Feature        | Docker Containers | Virtual Machines |
 | -------------- | ----------------- | ---------------- |
@@ -28,7 +28,7 @@
 
 ---
 
-## 4: Key Docker Components
+### 4: Key Docker Components
 
 - **Docker Engine**: Runs and manages containers.
 - **Docker Images**: Read-only templates to create containers.
@@ -37,7 +37,7 @@
 
 ---
 
-## Slide 5: Basic Docker Commands
+### 5: Basic Docker Commands
 
 ```sh
 docker run hello-world  # Run a test container
@@ -50,7 +50,7 @@ docker rm <container_id>  # Remove a container
 
 ---
 
-## 6: Installing Docker
+### 6: Installing Docker
 
 - **Windows**: Install Docker Desktop.
 - **Mac**: Install Docker Desktop.
@@ -63,7 +63,7 @@ docker --version
 
 ---
 
-## 7: Running Your First Container
+### 7: Running Your First Container
 
 ```sh
 docker run -d -p 80:80 nginx
@@ -73,8 +73,11 @@ docker run -d -p 80:80 nginx
 - Shows Nginx welcome page.
 
 ---
-
-## 8: Summary
+### 8. Mount local folder in nginx Container
+```sh
+docker run -d --name mynginx -p 8080:80 -v /home/vignesh/nginx_data:/usr/share/nginx/html:ro nginx
+```
+### Summary
 
 - Docker simplifies application deployment.
 - Lightweight and portable compared to VMs.
@@ -166,10 +169,7 @@ docker rm myapp_container
 ```sh
 docker rmi myapp
 ```
-### 10. Mount local folder in Container
-```sh
-docker run -d --name mynginx -p 8080:80 -v /home/vignesh/nginx_data:/usr/share/nginx/html:ro nginx
-```
+
 ## Best Practices
 - Use a minimal base image to reduce size.
 - Combine `RUN` instructions to minimize layers.
