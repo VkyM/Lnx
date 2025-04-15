@@ -1,0 +1,25 @@
+---
+- name: Install docker.io and build image
+  hosts: slaves
+  become: true
+  tasks:
+
+    - name: Install docker.io
+      apt:
+        name: docker.io
+        state: present
+        update_cache: yes
+
+    - name: Ensure Docker is started
+      service:
+        name: docker
+        state: started
+        enabled: yes
+
+    - name: Copy Dockerfile
+      copy:
+        src: ./Dockerfile
+        dest: /tmp/Dockerfile
+
+    - name: Build Docker image
+      shell: docker build -t myimage:latest /tmp
