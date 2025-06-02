@@ -4,7 +4,7 @@ This section focuses on preparing the host kernel to handle GPU passthrough by l
 
 ---
 
-## Step 2: Load VFIO Modules at Boot
+## Step 1: Load VFIO Modules at Boot
 
 These kernel modules enable PCI passthrough functionality using VFIO (Virtual Function I/O).
 
@@ -27,7 +27,7 @@ These ensure the modules are loaded at boot time.
 
 ---
 
-## Step 3: Prevent Host from Using the GPU
+## Step 2: Prevent Host from Using the GPU
 
 To make sure the Proxmox host doesn't claim the NVIDIA GPU, blacklist the default GPU drivers.
 
@@ -51,14 +51,14 @@ This prevents the Linux kernel from loading NVIDIA drivers on the host.
 
 After these steps, continue with device ID binding and passthrough configuration.
 
-### 4. Identify GPU Device IDs
+### 3. Identify GPU Device IDs
 ```text
 lspci -nn
 ```
 
 Look for your NVIDIA GPU and its associated audio device. Note the IDs (e.g., 10de:1b81 and 10de:10f0).
 
-### 5. Bind GPU to vfio-pci
+### 4. Bind GPU to vfio-pci
 Create the VFIO override file:
 ```text
 nano /etc/modprobe.d/vfio.conf
