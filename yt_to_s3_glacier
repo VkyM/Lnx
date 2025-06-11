@@ -1,0 +1,37 @@
+import os
+import boto3
+import subprocess
+
+# --- User Configuration ---
+PLAYLIST_URL = "https://www.youtube.com/playlist?list=PLrPlaYLVx7EeJBNzBAKmlT8-I9PPgbtzZ"
+DOWNLOAD_DIR = "yt_videos"
+BUCKET_NAME = "vky"
+STORAGE_CLASS = "GLACIER"  # Options: GLACIER, DEEP_ARCHIVE
+# ---------------------------
+
+# Step 1: Create download folder
+os.makedirs(DOWNLOAD_DIR, exist_ok=True)
+
+# Step 2: Download playlist using yt-dlp
+print(" Downloading playlist...")
+subprocess.run(["yt-dlp", "-f", "best", "-o", f"{DOWNLOAD_DIR}/%(title)s.%(ext)s", PLAYLIST_URL])
+
+# Step 3: Upload to S3 with Glacier storage class
+print(" Uploading to S3...")
+s3 = boto3.client('s3')
+
+for filename in os.listdir(DOWNLOAD_DIR):
+    file_path = os.path.join(DOWNLOAD_DIR, filename)
+    if os.path.isfile(file_path):
+        try:
+            print(f"Uploading: {filename}")
+            s3.upload_file(
+                Filename=file_path,
+                Bucket=BUCKET_NAME,
+                Key=filename,
+                ExtraArgs={'StorageClass': STORAGE_CLASS}
+            )
+        except Exception as e:
+            print(f"❌ Error uploading {filename}: {e}")
+
+print("✅ Done! All videos uploaded to Glacier.")
