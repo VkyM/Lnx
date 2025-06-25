@@ -2,6 +2,7 @@ import os
 import boto3
 import subprocess
 
+# You must install yt-dlp on ubuntu.
 # --- User Configuration ---
 PLAYLIST_URL = "https://www.youtube.com/playlist?list=PLrPlaYLVx7EeJBNzBAKmlT8-I9PPgbtzZ"
 DOWNLOAD_DIR = "yt_videos"
