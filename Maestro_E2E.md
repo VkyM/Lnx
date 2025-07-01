@@ -55,8 +55,8 @@ npx expo prebuild
 eas build -p android --profile development
 emulator -list-avds # list the avd
 emulator -avd testdevice -> terminal 1 # Run the emulator
-npx expo start -c -> terminal 2 # start the server for development profile
-npx expo run:android -> terminal 3
+npx expo run:android -> terminal 2 # It installs app on running emulator.
+npx expo start -c -> terminal 3 # start the server for development profile
 
 ```
 -------------------------------------------------------------------------------------------------------------------------
