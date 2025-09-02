@@ -1,9 +1,3 @@
-I am unable to create or download files directly to your computer. However, I can provide you with the content of the `.md` file you requested, which you can then copy and save as a markdown file on your local machine.
-
-Please find the full content of the file below.
-
------
-
 # Jenkins CI/CD Pipeline: A Complete Guide
 
 This guide walks you through setting up a full CI/CD pipeline using Jenkins, Docker, GitHub, and Kubernetes. You'll learn how to automate image building, versioning, and deployment.
