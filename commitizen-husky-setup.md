@@ -135,3 +135,4 @@ npm run commit
 ---
 
 ✅ Now it’s fully **automatic** for any user without extra configuration.
+Note:- It will ask scope default
