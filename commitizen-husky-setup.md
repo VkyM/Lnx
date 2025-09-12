@@ -12,7 +12,7 @@ npm install --save-dev commitizen cz-conventional-changelog husky
 
 ---
 
-## 2️⃣ Update `package.json`
+## 2️⃣ Update `package.json` like below
 
 ```json
 {
@@ -53,13 +53,16 @@ module.exports = {
   scopes: [],
   allowCustomScopes: false,
   allowBreakingChanges: false,
-  skipQuestions: ['scope', 'body', 'breaking', 'issues', 'footer'],
+  skipQuestions: ['scope', 'body', 'breaking', 'issues', 'footer'], // skip issues and footer as well
   messages: {
     type: "Select the type of change:",
     subject: "Write a short, imperative description of the change:"
   },
-  subjectLimit: 100
+  subjectLimit: 100,
+  breaklineChar: "\n",
+  footerPrefix: "Closes: "
 };
+
 ```
 
 - Only **type** and **description** prompts appear.  
@@ -70,13 +73,20 @@ module.exports = {
 
 ```bash
 npx husky install
+#If the error shows like deprecated husky install use below:
+npx husky-init && npm install
 npx husky add .husky/commit-msg "node scripts/append-branch.js $1"
 chmod +x .husky/commit-msg
+
+.husky/pre-commit must contain below content
+# Optional: run lint or leave empty
+echo "No test script, skipping..."
+
 ```
 
 ---
 
-## 5️⃣ Add `append-branch.js` script
+## 5️⃣ Add `append-branch.js` under script
 
 ```javascript
 const fs = require('fs');
@@ -85,16 +95,25 @@ const { execSync } = require('child_process');
 const commitMsgPath = process.argv[2];
 if (!commitMsgPath) process.exit(1);
 
+// Read the commit message from Commitizen
 let msg = fs.readFileSync(commitMsgPath, 'utf8').trim();
+
+// Get branch info
 const branchName = execSync('git rev-parse --abbrev-ref HEAD', { encoding: 'utf8' }).trim();
+
+// Extract Jira ID from branch, e.g., RAD-16
 const jiraIdMatch = branchName.match(/[A-Z]+-\d+/);
 const jiraId = jiraIdMatch ? jiraIdMatch[0] : 'NO-JIRA';
-const branchTag = `[${branchName}]`;
 
-// Compose final message
-const finalMsg = `${jiraId} #comment ${msg} on ${branchTag}`;
+// Compose final commit message
+// Assuming Commitizen gives type and short description like "feat(test): Login Design"
+const finalMsg = `${jiraId} #comment ${msg} on [${branchName}]`;
+
+// Write it back to commit message file
 fs.writeFileSync(commitMsgPath, finalMsg, 'utf8');
+
 console.log(`Formatted commit message: ${finalMsg}`);
+
 ```
 
 ---
