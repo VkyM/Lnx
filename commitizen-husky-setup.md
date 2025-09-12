@@ -67,8 +67,8 @@ module.exports = {
 
 ```
 
-- Only **type** and **description** prompts appear.  
-
+- Only **type** and **description** **scope** prompts appear.  
+- Note:- It will ask scope default
 ---
 
 ## 4️⃣ Add Husky commit-msg hook
@@ -135,4 +135,4 @@ npm run commit
 ---
 
 ✅ Now it’s fully **automatic** for any user without extra configuration.
-Note:- It will ask scope default
+
