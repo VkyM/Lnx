@@ -9,7 +9,7 @@ prerequisite:- branch-name must start with JIRA-ID like PROJ-112-login, your cre
 ## 1️⃣ Install dependencies
 
 ```bash
-npm install --save-dev commitizen cz-conventional-changelog husky
+npm install --save-dev commitizen cz-conventional-changelog husky cz-customizable
 ```
 
 ---
@@ -29,7 +29,7 @@ npm install --save-dev commitizen cz-conventional-changelog husky
   },
   "config": {
     "commitizen": {
-      "path": "cz-conventional-changelog"
+      "path": "./node_modules/cz-customizable"
     }
   }
 }
