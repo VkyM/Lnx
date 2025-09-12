@@ -1,6 +1,8 @@
-# Automatic Commitizen + Husky Setup with Branch Append
+# Automatic Commitizen + Husky Setup with Branch Append and update comments,commits,branches,pull request on jira.
 
 This guide ensures that **anyone who clones your repo** will have Commitizen + Husky automatically configured, with branch appending enabled.
+
+prerequisite:- branch-name must start with JIRA-ID like PROJ-112-login, your create branch from vscode using atlassian, it automatically create branchname when click start work button on the ticket of jira on vscode.
 
 ---
 
