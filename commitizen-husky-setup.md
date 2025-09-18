@@ -80,10 +80,10 @@ npx husky-init && npm install
 npx husky add .husky/commit-msg "node scripts/append-branch.js $1"
 chmod +x .husky/commit-msg
 
-.husky/pre-commit must contain below content
-# Optional: run lint or leave empty
-echo "No test script, skipping..."
+# remove pre-commit
+rm .husky/pre-commit 
 
+git push
 ```
 
 ---
