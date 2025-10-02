@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Goal Tracker</title>
+<style>
+body { font-family: 'Segoe UI', sans-serif; background:#eef2f7; margin:0; padding:20px; }
+h1 { text-align:center; color:#333; margin-bottom:20px; }
+.goal-container, .small-goal-container, .task { 
+  background:#fff; 
+  padding:12px 16px; 
+  border-radius:12px; 
+  box-shadow:0 4px 12px rgba(0,0,0,0.1); 
+  margin-bottom:12px; 
+  display:flex; 
+  justify-content:space-between; 
+  align-items:center;
+}
+.goal-container { border-left:6px solid #007bff; }
+.small-goal-container { border-left:5px solid #17a2b8; margin-left:20px; padding-left:18px; }
+.task { border-left:4px solid #28a745; margin-left:40px; padding-left:18px; }
+
+button { padding:4px 8px; margin-left:5px; border-radius:6px; border:none; cursor:pointer; }
+.add-btn { background:#007bff;color:#fff; } 
+.add-btn:hover{background:#0056b3;}
+.symbol-btn{background:none;color:#000;font-size:16px;padding:0;cursor:pointer;} 
+.symbol-btn:hover{color:#007bff;}
+
+.form-inline{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px;}
+.form-inline input{flex:1;padding:6px;border-radius:6px;border:1px solid #ccc;}
+.import-export{margin-bottom:20px; display:flex; gap:10px;}
+.left{flex:1;font-weight:500;}
+.right{display:flex;align-items:center;gap:8px;color:#666;}
+</style>
+</head>
+<body>
+
+<h1>Goal Tracker</h1>
+
+<div class="import-export">
+  <button class="add-btn" onclick="exportJSON()">Export JSON</button>
+  <input type="file" id="importFile" accept=".json">
+  <button class="add-btn" onclick="importJSON()">Import JSON</button>
+</div>
+
+<div class="goal-container">
+  <div class="form-inline">
+    <input type="text" id="mainGoalName" placeholder="Enter main goal">
+    <input type="date" id="mainGoalDue">
+    <button class="add-btn" onclick="addMainGoal()">Add</button>
+  </div>
+</div>
+
+<div id="goalsList"></div>
+
+<script>
+let goals = JSON.parse(localStorage.getItem('goals')||'[]');
+
+function saveToLocalStorage(){ localStorage.setItem('goals', JSON.stringify(goals)); }
+
+function addMainGoal(){
+  const name = document.getElementById('mainGoalName').value.trim();
+  const due = document.getElementById('mainGoalDue').value;
+  if(!name || !due) return alert("Enter main goal and due date.");
+  goals.push({name,due,smallGoals:[]});
+  saveToLocalStorage(); renderGoals();
+  document.getElementById('mainGoalName').value='';
+  document.getElementById('mainGoalDue').value='';
+}
+
+function renderGoals(){
+  const container = document.getElementById('goalsList');
+  container.innerHTML = '';
+  goals.forEach((goal, mIndex)=>{
+    const goalDiv = document.createElement('div'); goalDiv.className='goal-container';
+    goalDiv.innerHTML = `
+      <div class="left">Main Goal: ${goal.name}</div>
+      <div class="right">(Due: ${goal.due})
+        <button class="add-btn" onclick="showSmallGoalInput(${mIndex})">+ Small Goal</button>
+        <button class="symbol-btn" onclick="editMainGoal(${mIndex})">✏️</button>
+        <button class="symbol-btn" onclick="deleteMainGoal(${mIndex})">🗑️</button>
+      </div>
+    `;
+    container.appendChild(goalDiv);
+
+    goal.smallGoals.forEach((sg, sIndex)=>{
+      const sgDiv = document.createElement('div'); sgDiv.className='small-goal-container';
+      sgDiv.innerHTML = `
+        <div class="left">${sg.name}</div>
+        <div class="right">(Due: ${sg.due})
+          <button class="add-btn" onclick="showTaskInput(${mIndex},${sIndex})">+ Task</button>
+          <button class="symbol-btn" onclick="editSmallGoal(${mIndex},${sIndex})">✏️</button>
+          <button class="symbol-btn" onclick="deleteSmallGoal(${mIndex},${sIndex})">🗑️</button>
+        </div>
+      `;
+      container.appendChild(sgDiv);
+
+      sg.tasks.forEach((t, tIndex)=>{
+        const tDiv = document.createElement('div'); 
+        tDiv.className='task';
+        if(t.done) tDiv.style.background='#16a34a'; // GREEN if done
+        tDiv.innerHTML = `
+          <div class="left">${t.taskName}</div>
+          <div class="right">${t.taskDate} ${t.taskTime}
+            <button class="symbol-btn" onclick="editTask(${mIndex},${sIndex},${tIndex})">✏️</button>
+            <button class="symbol-btn" onclick="deleteTask(${mIndex},${sIndex},${tIndex})">🗑️</button>
+          </div>
+        `;
+        container.appendChild(tDiv);
+      });
+    });
+  });
+}
+
+// Input + add functions
+function showSmallGoalInput(mIndex){
+  const container = document.getElementById('goalsList');
+  const div = document.createElement('div'); div.className='small-goal-container form-inline';
+  div.innerHTML = `
+    <input type="text" id="sgName${mIndex}" placeholder="Small goal name">
+    <input type="date" id="sgDue${mIndex}" max="${goals[mIndex].due}">
+    <button class="add-btn" onclick="addSmallGoal(${mIndex})">Add</button>
+  `;
+  container.appendChild(div);
+}
+function addSmallGoal(mIndex){
+  const name = document.getElementById(`sgName${mIndex}`).value.trim();
+  const due = document.getElementById(`sgDue${mIndex}`).value;
+  if(!name||!due) return alert("Enter small goal and due date.");
+  if(due>goals[mIndex].due) return alert("Cannot exceed Main Goal due date.");
+  goals[mIndex].smallGoals.push({name,due,tasks:[]});
+  saveToLocalStorage(); renderGoals();
+}
+
+function showTaskInput(mIndex,sIndex){
+  const container = document.getElementById('goalsList');
+  const div = document.createElement('div'); div.className='task form-inline';
+  div.innerHTML = `
+    <input type="text" id="taskName${mIndex}_${sIndex}" placeholder="Task name">
+    <input type="date" id="taskDate${mIndex}_${sIndex}" max="${goals[mIndex].smallGoals[sIndex].due}">
+    <input type="time" id="taskTime${mIndex}_${sIndex}">
+    <button class="add-btn" onclick="addTask(${mIndex},${sIndex})">Add</button>
+  `;
+  container.appendChild(div);
+}
+function addTask(mIndex,sIndex){
+  const name = document.getElementById(`taskName${mIndex}_${sIndex}`).value.trim();
+  const date = document.getElementById(`taskDate${mIndex}_${sIndex}`).value;
+  const time = document.getElementById(`taskTime${mIndex}_${sIndex}`).value;
+  if(!name||!date||!time) return alert("Fill all fields.");
+  if(date>goals[mIndex].smallGoals[sIndex].due) return alert("Task cannot exceed Small Goal due date.");
+  goals[mIndex].smallGoals[sIndex].tasks.push({taskName:name,taskDate:date,taskTime:time,done:false});
+  saveToLocalStorage(); renderGoals();
+}
+
+// Delete/Edit functions
+function deleteMainGoal(i){ goals.splice(i,1); saveToLocalStorage(); renderGoals(); }
+function deleteSmallGoal(m,s){ goals[m].smallGoals.splice(s,1); saveToLocalStorage(); renderGoals(); }
+function deleteTask(m,s,t){ goals[m].smallGoals[s].tasks.splice(t,1); saveToLocalStorage(); renderGoals(); }
+
+function editMainGoal(i){
+  const name=prompt("Edit Main Goal",goals[i].name);
+  const due=prompt("Due date",goals[i].due);
+  if(name&&due){ goals[i].name=name; goals[i].due=due; saveToLocalStorage(); renderGoals(); }
+}
+function editSmallGoal(m,s){
+  const sg=goals[m].smallGoals[s];
+  const name=prompt("Edit Small Goal",sg.name);
+  const due=prompt("Due date",sg.due);
+  if(name&&due&&due<=goals[m].due){ sg.name=name; sg.due=due; saveToLocalStorage(); renderGoals(); }
+}
+function editTask(m,s,t){
+  const task=goals[m].smallGoals[s].tasks[t];
+  const name=prompt("Edit Task",task.taskName);
+  const date=prompt("Date",task.taskDate);
+  const time=prompt("Time",task.taskTime);
+  if(name&&date&&time&&date<=goals[m].smallGoals[s].due){ task.taskName=name; task.taskDate=date; task.taskTime=time; saveToLocalStorage(); renderGoals(); }
+}
+
+// JSON export/import
+function exportJSON(){ const data=JSON.stringify(goals,null,2); const blob=new Blob([data],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='goals.json'; a.click(); URL.revokeObjectURL(url);}
+function importJSON(){ const f=document.getElementById('importFile').files[0]; if(!f)return; const r=new FileReader(); r.onload=()=>{ try{const j=JSON.parse(r.result); if(Array.isArray(j)){goals=j; saveToLocalStorage(); renderGoals(); alert("Imported!");}}catch(e){alert("Invalid JSON");} }; r.readAsText(f); }
+
+renderGoals();
+</script>
+</body>
+</html>
