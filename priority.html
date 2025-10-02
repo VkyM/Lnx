@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Eisenhower Matrix — Done Panel Right</title>
+  <style>
+    :root{--bg:#f5f7fb;--card:#fff;--accent:#2563eb;--muted:#6b7280}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Inter,system-ui,Roboto,Arial;background:var(--bg);color:#0f172a}
+    header{padding:20px;text-align:center}
+    h1{margin:0;font-size:20px}
+    .wrap{max-width:1200px;margin:16px auto;padding:12px}
+    .controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}
+    input,select,button,textarea{padding:8px;border-radius:8px;border:1px solid #e6eef8}
+    .btn{background:var(--accent);color:#fff;border:none;padding:8px 12px;border-radius:8px;cursor:pointer}
+    .btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(37,99,235,0.12)}
+
+    .main-container{display:flex;gap:12px}
+    .matrix{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:12px;flex:1}
+    .quadrant{background:linear-gradient(180deg,var(--card),#fbfdff);padding:12px;border-radius:10px;min-height:260px;box-shadow:0 6px 18px rgba(16,24,40,0.06)}
+    .quadrant h3{margin:0 0 8px 0;font-size:16px}
+    .list{min-height:120px;max-height:400px;overflow-y:auto}
+    .task{background:#fff;padding:10px;border-radius:8px;margin-bottom:8px;border-left:4px solid rgba(37,99,235,0.08);display:flex;justify-content:space-between;align-items:flex-start}
+    .task .left{max-width:78%}
+    .task strong{display:block}
+    .task .meta{font-size:12px;color:var(--muted);margin-top:6px}
+    .task .actions{display:flex;gap:6px;align-items:center}
+    .task .actions span{cursor:pointer;font-size:16px}
+    .drop-target{outline:3px dashed rgba(37,99,235,0.12)}
+
+    .done-panel{width:250px;background:#f0f4f8;padding:12px;border-radius:10px;box-shadow:0 6px 18px rgba(16,24,40,0.06);display:flex;flex-direction:column;}
+    .done-panel h3{margin:0 0 8px 0;font-size:16px}
+    .done-panel .list{flex:1;overflow-y:auto;}
+
+    footer{margin-top:12px;text-align:center;color:var(--muted);font-size:13px}
+    @media(max-width:900px){.main-container{flex-direction:column}.done-panel{width:100%;}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Eisenhower Matrix (HTML/CSS/JS) with Done Panel Right</h1>
+    <p style="color:var(--muted);font-size:13px;margin:6px 0">Tasks saved in your browser (localStorage).</p>
+  </header>
+
+  <div class="wrap">
+    <div class="controls">
+      <input id="title" placeholder="Task title" />
+      <select id="importance">
+        <option value="true">Important</option>
+        <option value="false">Not Important</option>
+      </select>
+      <select id="urgency">
+        <option value="true">Urgent</option>
+        <option value="false">Not Urgent</option>
+      </select>
+      <button id="addBtn" class="btn">Add</button>
+      <button id="clearBtn" class="btn ghost">Clear all</button>
+      <button id="exportBtn" class="btn ghost">Export JSON</button>
+      <input id="importFile" type="file" accept="application/json" style="display:none" />
+      <button id="importBtn" class="btn ghost">Import JSON</button>
+    </div>
+
+    <div class="main-container">
+      <div class="matrix">
+        <section class="quadrant" data-important="true" data-urgent="true">
+          <h3>Do First (Important & Urgent)</h3>
+          <div class="list" data-important="true" data-urgent="true"></div>
+        </section>
+
+        <section class="quadrant" data-important="true" data-urgent="false">
+          <h3>Schedule (Important & Not Urgent)</h3>
+          <div class="list" data-important="true" data-urgent="false"></div>
+        </section>
+
+        <section class="quadrant" data-important="false" data-urgent="true">
+          <h3>Delegate (Not Important & Urgent)</h3>
+          <div class="list" data-important="false" data-urgent="true"></div>
+        </section>
+
+        <section class="quadrant" data-important="false" data-urgent="false">
+          <h3>Eliminate (Not Important & Not Urgent)</h3>
+          <div class="list" data-important="false" data-urgent="false"></div>
+        </section>
+      </div>
+
+      <div class="done-panel">
+        <h3>Done ✅</h3>
+        <div class="list" data-done="true"></div>
+      </div>
+    </div>
+
+    <footer>
+      <small>Tasks marked done move to the right-side Done panel.</small>
+    </footer>
+  </div>
+
+  <script>
+    const STORAGE_KEY = 'eisenhower_tasks_right_done';
+
+    function uid(){return Math.random().toString(36).slice(2,9)}
+    function load(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch(e){return[]}}
+    function save(tasks){localStorage.setItem(STORAGE_KEY,JSON.stringify(tasks))}
+
+    function escapeHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+    function createTaskEl(t){
+      const el=document.createElement('div');
+      el.className='task';
+      el.draggable=!t.done;
+      el.dataset.id=t.id;
+      el.innerHTML=`<div class="left"><strong>${escapeHtml(t.title)}</strong><div class="meta">${t.description||''}</div></div>
+        <div class="actions">
+          <span class='edit' title='Edit'>✏️</span>
+          <span class='del' title='Delete'>🗑️</span>
+          ${!t.done?'<span class="done" title="Done">✅</span>':''}
+        </div>`;
+
+      if(!t.done){
+        el.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',t.id);el.classList.add('dragging')});
+        el.addEventListener('dragend',e=>{el.classList.remove('dragging')});
+      }
+
+      el.querySelector('.edit').addEventListener('click',()=>{
+        const newTitle=prompt('Edit title',t.title); if(!newTitle)return;
+        const newDesc=prompt('Edit description',t.description||'')||'';
+        t.title=newTitle;t.description=newDesc;updateTask(t);
+      });
+
+      el.querySelector('.del').addEventListener('click',()=>{
+        if(confirm('Delete this task?')) deleteTask(t.id);
+      });
+
+      const doneBtn = el.querySelector('.done');
+      if(doneBtn){ doneBtn.addEventListener('click',()=>{
+        t.done=true;
+        save(load().map(x=>x.id===t.id?t:x));
+        render();
+      });}
+
+      return el;
+    }
+
+    function render(){
+      const tasks=load();
+      document.querySelectorAll('.list').forEach(l=>l.innerHTML='');
+      tasks.forEach(t=>{
+        if(t.done){
+          const list=document.querySelector('.list[data-done="true"]');
+          if(list) list.appendChild(createTaskEl(t));
+        }else{
+          const list=document.querySelector(`.list[data-important='${t.important}'][data-urgent='${t.urgent}']`);
+          if(list) list.appendChild(createTaskEl(t));
+        }
+      });
+    }
+
+    function addTask(title,important,urgent){
+      const tasks=load();
+      tasks.push({id:uid(),title,description:'',important:!!important,urgent:!!urgent,done:false,createdAt:new Date().toISOString()});
+      save(tasks);render();
+    }
+
+    function updateTask(updated){
+      const tasks=load();
+      const i=tasks.findIndex(t=>t.id===updated.id); if(i>-1){tasks[i]=updated;save(tasks);render();}
+    }
+
+    function deleteTask(id){
+      let tasks=load(); tasks=tasks.filter(t=>t.id!==id); save(tasks); render();
+    }
+
+    document.querySelectorAll('.quadrant').forEach(q=>{
+      q.addEventListener('dragover',e=>{e.preventDefault();q.classList.add('drop-target')});
+      q.addEventListener('dragleave',e=>{q.classList.remove('drop-target')});
+      q.addEventListener('drop',e=>{
+        e.preventDefault();q.classList.remove('drop-target');
+        const id=e.dataTransfer.getData('text/plain');
+        const important=q.dataset.important==='true';
+        const urgent=q.dataset.urgent==='true';
+        const tasks=load();
+        const t=tasks.find(x=>x.id===id);if(!t)return;
+        t.important=important;t.urgent=urgent; save(tasks);render();
+      });
+    });
+
+    document.getElementById('addBtn').addEventListener('click',()=>{
+      const title=document.getElementById('title').value.trim();if(!title)return alert('Enter title');
+      const important=document.getElementById('importance').value==='true';
+      const urgent=document.getElementById('urgency').value==='true';
+      addTask(title,important,urgent);document.getElementById('title').value='';
+    });
+
+    document.getElementById('clearBtn').addEventListener('click',()=>{
+      if(confirm('Clear all tasks?')){localStorage.removeItem(STORAGE_KEY);render();}
+    });
+
+    document.getElementById('exportBtn').addEventListener('click',()=>{
+      const data=JSON.stringify(load(),null,2);
+      const blob=new Blob([data],{type:'application/json'});
+      const url=URL.createObjectURL(blob);
+      const a=document.createElement('a');a.href=url;a.download='eisenhower-tasks.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
+    });
+
+    document.getElementById('importBtn').addEventListener('click',()=>document.getElementById('importFile').click());
+    document.getElementById('importFile').addEventListener('change',e=>{
+      const f=e.target.files[0];if(!f)return;
+      const reader=new FileReader();
+      reader.onload=()=>{
+        try{
+          const parsed=JSON.parse(reader.result);
+          if(Array.isArray(parsed)){localStorage.setItem(STORAGE_KEY,JSON.stringify(parsed));render();alert('Imported');}
+          else alert('Invalid JSON');
+        }catch(err){alert('Error parsing JSON')}
+      };
+      reader.readAsText(f);e.target.value='';
+    });
+
+    render();
+  </script>
+</body>
+</html>
