@@ -1,222 +1,233 @@
 <!doctype html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Eisenhower Matrix — Done Panel Right</title>
-  <style>
-    :root{--bg:#f5f7fb;--card:#fff;--accent:#2563eb;--muted:#6b7280}
-    *{box-sizing:border-box}
-    body{margin:0;font-family:Inter,system-ui,Roboto,Arial;background:var(--bg);color:#0f172a}
-    header{padding:20px;text-align:center}
-    h1{margin:0;font-size:20px}
-    .wrap{max-width:1200px;margin:16px auto;padding:12px}
-    .controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:12px}
-    input,select,button,textarea{padding:8px;border-radius:8px;border:1px solid #e6eef8}
-    .btn{background:var(--accent);color:#fff;border:none;padding:8px 12px;border-radius:8px;cursor:pointer}
-    .btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(37,99,235,0.12)}
-
-    .main-container{display:flex;gap:12px}
-    .matrix{display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:12px;flex:1}
-    .quadrant{background:linear-gradient(180deg,var(--card),#fbfdff);padding:12px;border-radius:10px;min-height:260px;box-shadow:0 6px 18px rgba(16,24,40,0.06)}
-    .quadrant h3{margin:0 0 8px 0;font-size:16px}
-    .list{min-height:120px;max-height:400px;overflow-y:auto}
-    .task{background:#fff;padding:10px;border-radius:8px;margin-bottom:8px;border-left:4px solid rgba(37,99,235,0.08);display:flex;justify-content:space-between;align-items:flex-start}
-    .task .left{max-width:78%}
-    .task strong{display:block}
-    .task .meta{font-size:12px;color:var(--muted);margin-top:6px}
-    .task .actions{display:flex;gap:6px;align-items:center}
-    .task .actions span{cursor:pointer;font-size:16px}
-    .drop-target{outline:3px dashed rgba(37,99,235,0.12)}
-
-    .done-panel{width:250px;background:#f0f4f8;padding:12px;border-radius:10px;box-shadow:0 6px 18px rgba(16,24,40,0.06);display:flex;flex-direction:column;}
-    .done-panel h3{margin:0 0 8px 0;font-size:16px}
-    .done-panel .list{flex:1;overflow-y:auto;}
-
-    footer{margin-top:12px;text-align:center;color:var(--muted);font-size:13px}
-    @media(max-width:900px){.main-container{flex-direction:column}.done-panel{width:100%;}}
-  </style>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Eisenhower Matrix - Drag & Drop + Pomodoro</title>
+<style>
+:root {
+  --bg:#121212;
+  --card:#1e1e2f;
+  --accent:#3b82f6;
+  --muted:#9ca3af;
+  --inprogress:#ff6f00;
+  --done:#16a34a;
+  --text:#e5e7eb;
+}
+*{box-sizing:border-box;}
+body{margin:0;font-family:Inter,system-ui,Roboto,Arial;background:var(--bg);color:var(--text);}
+.wrap{max-width:1300px;margin:16px auto;padding:12px;}
+.controls{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-bottom:12px;}
+input,select,button{padding:8px;border-radius:8px;border:1px solid #3b3b4a;background:#2c2c3a;color:var(--text);}
+.btn{background:var(--accent);color:#fff;border:none;padding:8px 12px;border-radius:8px;cursor:pointer;}
+.btn.ghost{background:transparent;color:var(--accent);border:1px solid rgba(59,130,246,0.2);}
+.layout{display:grid;grid-template-columns:2fr 1fr;gap:16px;}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.quadrant,.panel{background:linear-gradient(180deg,var(--card),#2c2c3a);padding:12px;border-radius:10px;min-height:200px;box-shadow:0 6px 18px rgba(0,0,0,0.3);}
+.quadrant h3,.panel h3{margin:0 0 8px 0;font-size:16px;}
+.list{min-height:80px;}
+.task{background:#2c2c3a;padding:10px;border-radius:8px;margin-bottom:8px;border-left:4px solid rgba(59,130,246,0.3);display:flex;flex-direction:column;transition:all 0.3s;color:var(--text);}
+.task .top{display:flex;justify-content:space-between;align-items:flex-start;width:100%;}
+.task strong{display:block;}
+.task .actions{display:flex;gap:6px;}
+.task.inprogress{background:var(--inprogress);color:#fff;border-left-color:#fff;position:relative;overflow:hidden;}
+.task.done{background:var(--done);color:#fff;}
+.task .progress-bar{position:absolute;bottom:0;left:0;height:4px;background:rgba(255,255,255,0.7);width:0%;transition:width 1s linear;}
+@keyframes pulse{0%{box-shadow:0 0 15px rgba(255,111,0,0.6);}50%{box-shadow:0 0 30px rgba(255,111,0,1);}100%{box-shadow:0 0 15px rgba(255,111,0,0.6);}}
+.task.inprogress.active{animation:pulse 1.2s infinite;}
+.inprogress-compact{background:var(--card);padding:8px 12px;border-radius:10px;margin-bottom:12px;box-shadow:0 6px 18px rgba(0,0,0,0.3);}
+.timer{text-align:center;}
+.time{font-size:28px;font-weight:bold;margin:4px 0;}
+.timer button{margin:0 2px;padding:4px 8px;font-size:12px;}
+footer{margin-top:12px;text-align:center;color:var(--muted);font-size:13px;}
+@media(max-width:900px){.layout{grid-template-columns:1fr;}}
+</style>
 </head>
 <body>
-  <header>
-    <h1>Eisenhower Matrix (HTML/CSS/JS) with Done Panel Right</h1>
-    <p style="color:var(--muted);font-size:13px;margin:6px 0">Tasks saved in your browser (localStorage).</p>
-  </header>
+<div class="wrap">
+<div class="controls">
+  <input id="title" placeholder="Task title" />
+  <select id="importance">
+    <option value="true">Important</option>
+    <option value="false">Not Important</option>
+  </select>
+  <select id="urgency">
+    <option value="true">Urgent</option>
+    <option value="false">Not Urgent</option>
+  </select>
+  <button id="addBtn" class="btn">Add</button>
+  <button id="clearBtn" class="btn ghost">Clear all</button>
+  <button id="exportBtn" class="btn ghost">Export JSON</button>
+  <input id="importFile" type="file" accept="application/json" style="display:none" />
+  <button id="importBtn" class="btn ghost">Import JSON</button>
+  <button onclick="window.open('goal.html','_blank')" class="btn">🎯 View Goals</button>
+</div>
 
-  <div class="wrap">
-    <div class="controls">
-      <input id="title" placeholder="Task title" />
-      <select id="importance">
-        <option value="true">Important</option>
-        <option value="false">Not Important</option>
-      </select>
-      <select id="urgency">
-        <option value="true">Urgent</option>
-        <option value="false">Not Urgent</option>
-      </select>
-      <button id="addBtn" class="btn">Add</button>
-      <button id="clearBtn" class="btn ghost">Clear all</button>
-      <button id="exportBtn" class="btn ghost">Export JSON</button>
-      <input id="importFile" type="file" accept="application/json" style="display:none" />
-      <button id="importBtn" class="btn ghost">Import JSON</button>
+<div class="layout">
+  <div>
+    <div class="inprogress-compact">
+      <div class="timer">
+        <div class="time" id="pomodoro">25:00</div>
+        <button class="btn ghost" id="startPomodoro">Start</button>
+        <button class="btn ghost" id="stopPomodoro">Stop</button>
+        <button class="btn ghost" id="resetPomodoro">Reset</button>
+      </div>
+      <div class="list" id="inProgressList"></div>
     </div>
 
-    <div class="main-container">
-      <div class="matrix">
-        <section class="quadrant" data-important="true" data-urgent="true">
-          <h3>Do First (Important & Urgent)</h3>
-          <div class="list" data-important="true" data-urgent="true"></div>
-        </section>
-
-        <section class="quadrant" data-important="true" data-urgent="false">
-          <h3>Schedule (Important & Not Urgent)</h3>
-          <div class="list" data-important="true" data-urgent="false"></div>
-        </section>
-
-        <section class="quadrant" data-important="false" data-urgent="true">
-          <h3>Delegate (Not Important & Urgent)</h3>
-          <div class="list" data-important="false" data-urgent="true"></div>
-        </section>
-
-        <section class="quadrant" data-important="false" data-urgent="false">
-          <h3>Eliminate (Not Important & Not Urgent)</h3>
-          <div class="list" data-important="false" data-urgent="false"></div>
-        </section>
-      </div>
-
-      <div class="done-panel">
-        <h3>Done ✅</h3>
-        <div class="list" data-done="true"></div>
-      </div>
-    </div>
-
-    <footer>
-      <small>Tasks marked done move to the right-side Done panel.</small>
-    </footer>
+    <main class="grid">
+      <section class="quadrant" data-important="true" data-urgent="true">
+        <h3>Do First</h3>
+        <div class="list" data-important="true" data-urgent="true"></div>
+      </section>
+      <section class="quadrant" data-important="true" data-urgent="false">
+        <h3>Schedule</h3>
+        <div class="list" data-important="true" data-urgent="false"></div>
+      </section>
+      <section class="quadrant" data-important="false" data-urgent="true">
+        <h3>Delegate</h3>
+        <div class="list" data-important="false" data-urgent="true"></div>
+      </section>
+      <section class="quadrant" data-important="false" data-urgent="false">
+        <h3>Eliminate</h3>
+        <div class="list" data-important="false" data-urgent="false"></div>
+      </section>
+    </main>
   </div>
 
-  <script>
-    const STORAGE_KEY = 'eisenhower_tasks_right_done';
+  <aside class="panel" id="donePanel">
+    <h3>✅ Done</h3>
+    <div class="list" id="doneList"></div>
+  </aside>
+</div>
+<footer><small>Local-only. Export JSON to backup.</small></footer>
+</div>
 
-    function uid(){return Math.random().toString(36).slice(2,9)}
-    function load(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch(e){return[]}}
-    function save(tasks){localStorage.setItem(STORAGE_KEY,JSON.stringify(tasks))}
+<script>
+const STORAGE_KEY='eisenhower_tasks_v4';
+let pomodoroInterval, timeLeft=25*60;
 
-    function escapeHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+// Utilities
+function uid(){return Math.random().toString(36).slice(2,9);}
+function load(){try{return JSON.parse(localStorage.getItem(STORAGE_KEY)||'[]')}catch(e){return []}}
+function save(tasks){localStorage.setItem(STORAGE_KEY,JSON.stringify(tasks))}
+function escapeHtml(s){return String(s||'').replace(/[&<>]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;"}[c]))}
+function todayDate(){const d=new Date();return d.toISOString().split('T')[0];}
 
-    function createTaskEl(t){
-      const el=document.createElement('div');
-      el.className='task';
-      el.draggable=!t.done;
-      el.dataset.id=t.id;
-      el.innerHTML=`<div class="left"><strong>${escapeHtml(t.title)}</strong><div class="meta">${t.description||''}</div></div>
-        <div class="actions">
-          <span class='edit' title='Edit'>✏️</span>
-          <span class='del' title='Delete'>🗑️</span>
-          ${!t.done?'<span class="done" title="Done">✅</span>':''}
-        </div>`;
-
-      if(!t.done){
-        el.addEventListener('dragstart',e=>{e.dataTransfer.setData('text/plain',t.id);el.classList.add('dragging')});
-        el.addEventListener('dragend',e=>{el.classList.remove('dragging')});
-      }
-
-      el.querySelector('.edit').addEventListener('click',()=>{
-        const newTitle=prompt('Edit title',t.title); if(!newTitle)return;
-        const newDesc=prompt('Edit description',t.description||'')||'';
-        t.title=newTitle;t.description=newDesc;updateTask(t);
-      });
-
-      el.querySelector('.del').addEventListener('click',()=>{
-        if(confirm('Delete this task?')) deleteTask(t.id);
-      });
-
-      const doneBtn = el.querySelector('.done');
-      if(doneBtn){ doneBtn.addEventListener('click',()=>{
-        t.done=true;
-        save(load().map(x=>x.id===t.id?t:x));
-        render();
-      });}
-
-      return el;
-    }
-
-    function render(){
-      const tasks=load();
-      document.querySelectorAll('.list').forEach(l=>l.innerHTML='');
-      tasks.forEach(t=>{
-        if(t.done){
-          const list=document.querySelector('.list[data-done="true"]');
-          if(list) list.appendChild(createTaskEl(t));
-        }else{
-          const list=document.querySelector(`.list[data-important='${t.important}'][data-urgent='${t.urgent}']`);
-          if(list) list.appendChild(createTaskEl(t));
+// Fetch today's tasks from goal.html
+function fetchTodaysTasks(){
+  const goals = JSON.parse(localStorage.getItem('goals')||'[]');
+  const today = todayDate();
+  let tasks = load();
+  const existingIds = new Set(tasks.map(t=>t.id));
+  goals.forEach(goal=>{
+    goal.smallGoals?.forEach(sg=>{
+      sg.tasks?.forEach(t=>{
+        if(t.taskDate===today){
+          const taskId=`goal-${goal.name}-${sg.name}-${t.taskName}`;
+          if(!existingIds.has(taskId)){
+            tasks.push({
+              id:taskId,
+              title:`${t.taskName} (${sg.name})`,
+              important:true,
+              urgent:false,
+              inProgress:false,
+              done:false
+            });
+          }
         }
       });
-    }
+    });
+  });
+  save(tasks);
+}
 
-    function addTask(title,important,urgent){
+// Drag & Drop
+function enableDragDrop(){
+  document.querySelectorAll('.list').forEach(list=>{
+    list.addEventListener('dragover', e=>{e.preventDefault();});
+    list.addEventListener('drop', e=>{
+      e.preventDefault();
+      const taskId=e.dataTransfer.getData('text');
+      const taskEl=document.querySelector(`.task[data-id='${taskId}']`);
+      if(taskEl) list.appendChild(taskEl);
       const tasks=load();
-      tasks.push({id:uid(),title,description:'',important:!!important,urgent:!!urgent,done:false,createdAt:new Date().toISOString()});
-      save(tasks);render();
-    }
-
-    function updateTask(updated){
-      const tasks=load();
-      const i=tasks.findIndex(t=>t.id===updated.id); if(i>-1){tasks[i]=updated;save(tasks);render();}
-    }
-
-    function deleteTask(id){
-      let tasks=load(); tasks=tasks.filter(t=>t.id!==id); save(tasks); render();
-    }
-
-    document.querySelectorAll('.quadrant').forEach(q=>{
-      q.addEventListener('dragover',e=>{e.preventDefault();q.classList.add('drop-target')});
-      q.addEventListener('dragleave',e=>{q.classList.remove('drop-target')});
-      q.addEventListener('drop',e=>{
-        e.preventDefault();q.classList.remove('drop-target');
-        const id=e.dataTransfer.getData('text/plain');
-        const important=q.dataset.important==='true';
-        const urgent=q.dataset.urgent==='true';
-        const tasks=load();
-        const t=tasks.find(x=>x.id===id);if(!t)return;
-        t.important=important;t.urgent=urgent; save(tasks);render();
-      });
+      const task=tasks.find(t=>t.id===taskId);
+      if(task){
+        task.important=list.dataset.important==='true';
+        task.urgent=list.dataset.urgent==='true';
+        save(tasks);
+      }
     });
+  });
+}
 
-    document.getElementById('addBtn').addEventListener('click',()=>{
-      const title=document.getElementById('title').value.trim();if(!title)return alert('Enter title');
-      const important=document.getElementById('importance').value==='true';
-      const urgent=document.getElementById('urgency').value==='true';
-      addTask(title,important,urgent);document.getElementById('title').value='';
-    });
+// Create Task Element
+function createTaskEl(t){
+  const el=document.createElement('div');
+  el.className='task';
+  el.draggable=true;
+  el.dataset.id=t.id;
+  if(t.inProgress) el.classList.add('inprogress');
+  if(t.done) el.classList.add('done');
+  el.innerHTML=`
+    <div class="top">
+      <strong>${escapeHtml(t.title)}</strong>
+      <div class="actions">
+        ${!t.done?'<button class="btn ghost progress">⏳</button>':''}
+        ${!t.done?'<button class="btn ghost doneBtn">✅</button>':''}
+        <button class="btn ghost del">🗑</button>
+      </div>
+    </div>
+    ${t.inProgress?'<div class="progress-bar"></div>':''}`;
+  
+  el.addEventListener('dragstart', e=>{e.dataTransfer.setData('text',t.id);});
+  el.querySelector('.progress')?.addEventListener('click', ()=>{ markInProgress(t.id); });
+  el.querySelector('.doneBtn')?.addEventListener('click', ()=>{ markDone(t.id); });
+  el.querySelector('.del').addEventListener('click', ()=>{ if(confirm('Delete task?')) deleteTask(t.id); });
+  return el;
+}
 
-    document.getElementById('clearBtn').addEventListener('click',()=>{
-      if(confirm('Clear all tasks?')){localStorage.removeItem(STORAGE_KEY);render();}
-    });
+// Render all tasks
+function render(){
+  const tasks=load();
+  document.querySelectorAll('.list').forEach(l=>l.innerHTML='');
+  tasks.forEach(t=>{
+    let list;
+    if(t.done){ list=document.getElementById('doneList'); }
+    else if(t.inProgress){ list=document.getElementById('inProgressList'); }
+    else{ list=document.querySelector(`.list[data-important='${t.important}'][data-urgent='${t.urgent}']`); }
+    if(list) list.appendChild(createTaskEl(t));
+  });
+  enableDragDrop();
+}
 
-    document.getElementById('exportBtn').addEventListener('click',()=>{
-      const data=JSON.stringify(load(),null,2);
-      const blob=new Blob([data],{type:'application/json'});
-      const url=URL.createObjectURL(blob);
-      const a=document.createElement('a');a.href=url;a.download='eisenhower-tasks.json';document.body.appendChild(a);a.click();a.remove();URL.revokeObjectURL(url);
-    });
+// CRUD
+function addTask(title,important,urgent){ const tasks=load(); tasks.push({id:uid(), title, important, urgent, inProgress:false, done:false}); save(tasks); render(); }
+function deleteTask(id){ const tasks=load().filter(t=>t.id!==id); save(tasks); render(); }
+function markInProgress(id){ let tasks=load(); tasks.forEach(t=>t.inProgress=false); const task=tasks.find(x=>x.id===id); if(task){task.inProgress=true; task.done=false;} save(tasks); render(); resetPomodoro(); }
+function markDone(id){ let tasks=load(); const task=tasks.find(t=>t.id===id); if(task){task.done=true; task.inProgress=false;} save(tasks); render(); resetPomodoro(); }
 
-    document.getElementById('importBtn').addEventListener('click',()=>document.getElementById('importFile').click());
-    document.getElementById('importFile').addEventListener('change',e=>{
-      const f=e.target.files[0];if(!f)return;
-      const reader=new FileReader();
-      reader.onload=()=>{
-        try{
-          const parsed=JSON.parse(reader.result);
-          if(Array.isArray(parsed)){localStorage.setItem(STORAGE_KEY,JSON.stringify(parsed));render();alert('Imported');}
-          else alert('Invalid JSON');
-        }catch(err){alert('Error parsing JSON')}
-      };
-      reader.readAsText(f);e.target.value='';
-    });
+// Pomodoro
+function updateDisplay(){ const m=String(Math.floor(timeLeft/60)).padStart(2,'0'); const s=String(timeLeft%60).padStart(2,'0'); document.getElementById('pomodoro').textContent=`${m}:${s}`; const taskEl=document.querySelector('.task.inprogress .progress-bar'); if(taskEl){ const percent=((25*60-timeLeft)/(25*60))*100; taskEl.style.width=percent+'%'; }}
+function startPomodoro(){ if(pomodoroInterval) return; const taskEl=document.querySelector('.task.inprogress'); if(taskEl) taskEl.classList.add('active'); pomodoroInterval=setInterval(()=>{ if(timeLeft>0){timeLeft--;updateDisplay();}else{clearInterval(pomodoroInterval);pomodoroInterval=null;alert("Pomodoro Finished!"); if(taskEl) taskEl.classList.remove('active');}},1000);}
+function stopPomodoro(){ clearInterval(pomodoroInterval); pomodoroInterval=null; const taskEl=document.querySelector('.task.inprogress'); if(taskEl) taskEl.classList.remove('active'); }
+function resetPomodoro(){ stopPomodoro(); timeLeft=25*60; updateDisplay(); const taskEl=document.querySelector('.task.inprogress'); if(taskEl) taskEl.classList.remove('active'); }
 
-    render();
-  </script>
+// Event Listeners
+document.getElementById('addBtn').addEventListener('click', ()=>{ const title=document.getElementById('title').value.trim(); if(!title) return; const important=document.getElementById('importance').value==='true'; const urgent=document.getElementById('urgency').value==='true'; addTask(title,important,urgent); document.getElementById('title').value=''; });
+document.getElementById('clearBtn').addEventListener('click',()=>{ if(confirm('Clear all tasks?')){ localStorage.removeItem(STORAGE_KEY); render(); }});
+document.getElementById('exportBtn').addEventListener('click',()=>{ const data=JSON.stringify(load(),null,2); const blob=new Blob([data],{type:'application/json'}); const url=URL.createObjectURL(blob); const a=document.createElement('a'); a.href=url; a.download='tasks.json'; a.click(); URL.revokeObjectURL(url); });
+document.getElementById('importBtn').addEventListener('click',()=>document.getElementById('importFile').click());
+document.getElementById('importFile').addEventListener('change',e=>{ const f=e.target.files[0]; if(!f) return; const r=new FileReader(); r.onload=()=>{ try{const p=JSON.parse(r.result); if(Array.isArray(p)){ save(p); render(); alert('Imported'); } }catch{} }; r.readAsText(f); e.target.value=''; });
+document.getElementById('startPomodoro').addEventListener('click', startPomodoro);
+document.getElementById('stopPomodoro').addEventListener('click', stopPomodoro);
+document.getElementById('resetPomodoro').addEventListener('click', resetPomodoro);
+
+// Init
+fetchTodaysTasks();
+updateDisplay();
+render();
+</script>
 </body>
 </html>
